@@ -1,25 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
+import './tailwind.output.css';
+
+import Home from './Components/Home';
+import CreateGroupChat from './Components/CreateGroupChat';
+import GroupChatList from './Components/GroupChatList';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="container mx-auto p-4">
+        <div className="bg-gray-100 p-4">
+          <nav>
+            <ul className="flex">
+              <li className="mr-6">
+                <Link to="/">Home</Link>
+              </li>
+              <li className="mr-6">
+                <Link to="/create">Create new group</Link>
+              </li>
+              <li className="mr-6">
+                <Link to="/list">Chat list</Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div className="mt-4">
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route path="/create">
+              <CreateGroupChat />
+            </Route>
+            <Route path="/list">
+              <GroupChatList />
+            </Route>
+          </Switch>
+          <Switch>
+            
+          </Switch>
+        </div>
+      </div>
+    </Router>
   );
 }
 
