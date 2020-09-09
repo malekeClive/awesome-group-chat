@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
 import './tailwind.output.css';
@@ -8,6 +8,13 @@ import CreateGroupChat from './Components/CreateGroupChat';
 import GroupChatList from './Components/GroupChatList';
 
 function App() {
+  const [ chatList, setChatList ] = useState([]);
+
+  const createNewChatGroup = (newList) => {
+    const newGroupList = [...chatList, newList]
+    setChatList(newGroupList);
+  }
+
   return (
     <Router>
       <div className="container mx-auto p-4">
@@ -33,10 +40,10 @@ function App() {
               <Home />
             </Route>
             <Route path="/create">
-              <CreateGroupChat />
+              <CreateGroupChat createNewChatGroup={createNewChatGroup} />
             </Route>
             <Route path="/list">
-              <GroupChatList />
+              <GroupChatList chatList={chatList} />
             </Route>
           </Switch>
           <Switch>

@@ -1,34 +1,6 @@
 import React from 'react'
 
-export default function GroupChatList() {
-  const testList = [
-    {
-      id: 1,
-      groupName: "test1",
-      members: 20,
-    },
-    {
-      id: 2,
-      groupName: "test2",
-      members: 20,
-    },
-    {
-      id: 3,
-      groupName: "test3",
-      members: 20,
-    },
-    {
-      id: 4,
-      groupName: "test4",
-      members: 20,
-    },
-    {
-      id: 5,
-      groupName: "test5",
-      members: 20,
-    },
-  ]
-
+export default function GroupChatList({ chatList }) {
   const openChatRoom = (groupId) => {
     console.log(groupId);
   }
@@ -36,8 +8,11 @@ export default function GroupChatList() {
   return (
     <div>
       {
-        testList.map(group => (
-          <div key={group.id} className="flex flex-col bg-gray-300 my-2 p-2 cursor-pointer hover:bg-gray-400" onClick={() => openChatRoom(group.id)}>
+        chatList.length === 0 ?
+          <div>Empty group</div>
+        :
+        chatList.map((group, idx) => (
+          <div key={idx} className="flex flex-col bg-gray-300 my-2 p-2 cursor-pointer hover:bg-gray-400" onClick={() => openChatRoom(idx)}>
             <div>
               <h3 className="text-gray-700">
                 {group.groupName}

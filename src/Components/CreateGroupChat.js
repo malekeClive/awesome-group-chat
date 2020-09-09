@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-export default function CreateGroupChat() {
+export default function CreateGroupChat({ createNewChatGroup }) {
   const [ groupName, setGroupName ] = useState("");
   const [ password, setPassword ]   = useState("");
   const [ confirmPassword, setConfirmPassword ] = useState("");
   const disableSubmitBtn = useRef(null);
-  const confirmedPasswordInput = useRef(null);
 
   useEffect(() => {
     const createBtnValidate = () => {
@@ -34,7 +33,9 @@ export default function CreateGroupChat() {
       password,
       confirmPassword
     }
-    console.log(form);
+    
+    createNewChatGroup(form);
+    
     setGroupName("");
     setPassword("");
     setConfirmPassword("");
@@ -56,7 +57,7 @@ export default function CreateGroupChat() {
 
           <div className="mt-4">
             <label className="block">Confirm password</label>
-            <input className={`border border-gray-300 rounded focus:outline-none focus:bg-${password === confirmPassword ? "red" : "gray"}-100 mt-2 px-2 py-1`} type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+            <input className={`border border-gray-300 rounded focus:outline-none focus:bg-${password === confirmPassword ? "gray" : "red"}-100 mt-2 px-2 py-1`} type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
           </div>
 
           <div className="block mt-4">
