@@ -1,10 +1,6 @@
 import React from 'react'
 
-export default function GroupChatList({ chatList }) {
-  const openChatRoom = (groupId) => {
-    console.log(groupId);
-  }
-
+export default function GroupChatList({ chatList, openChatRoom }) {
   return (
     <div>
       {
