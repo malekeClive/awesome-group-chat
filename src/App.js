@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, useHistory } from 'react-router-dom';
+import axios from 'axios';
 import './App.css';
 import './tailwind.output.css';
 
-import axios from 'axios';
-
-import Auth from './Components/AuthSingleton';
+import Auth from './Components/auth';
 import ProtectedRoute from './Components/ProtectedRoute';
 import UnprotectedRoute from './Components/UnprotectedRoute';
 
@@ -13,49 +12,64 @@ import Home from './Components/Home';
 import CreateGroupChat from './Components/CreateGroupChat';
 import GroupChatList from './Components/GroupChatList';
 import Login from './Components/Login';
-import Register from './Components/Register';
+import RoomChat from './Components/RoomChat';
 
-// Add a request interceptor
-axios.interceptors.request.use(function (config) {
-  const token = localStorage.getItem('token');
-  config.headers.Authorization = token;
+const apiURL = 'http://localhost:5000';
 
-  console.log(config);
-  return config;
-});
+axios.interceptors.request.use(
+  config => {
+    const { origin } = new URL(config.url);
+    const allowedOrigins = [apiURL];
+    const token = localStorage.getItem('token');
+
+    if (allowedOrigins.includes(origin)) {
+      config.headers.authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+)
 
 function App() {
   const [ isAuth, setIsAuth ] = useState(Auth.isAuthenticated());
-  const [ chatList, setChatList ] = useState([]);
 
   return (
     <Router>
-      { isAuth ?
-        <Nav setIsAuth={ setIsAuth } />
-      :
-        null
-      }
+      <div className="container">
+        {isAuth ? 
+          <Nav setIsAuth={setIsAuth} />
+        :
+          null
+        }
 
-      <Switch>
-        <UnprotectedRoute 
-          path="/login" 
-          render={ props => <Login {...props} setIsAuth={setIsAuth} /> } 
-        />
-        <UnprotectedRoute 
-          path="/register" 
-          render={ props => <Register {...props} /> } 
-        />
-        <ProtectedRoute exact path="/" render={Home} />
-        <ProtectedRoute 
-          path="/create" 
-          render={ props => <CreateGroupChat {...props} setChatList={setChatList} />
-        } />
-        <ProtectedRoute 
-          path="/list" 
-          render={ props => <GroupChatList {...props} chatList={chatList} /> 
-        } />
-        <Route path="*" component={() => "404 NOT FOUND"} />
-      </Switch>
+        <Switch>
+          <UnprotectedRoute 
+            path="/login" 
+            render={ (props) => <Login {...props} setIsAuth={setIsAuth} /> } 
+          />
+          <ProtectedRoute 
+            exact 
+            path="/" 
+            render={ (props) => <Home {...props} /> } 
+          />
+          <ProtectedRoute 
+            path="/create" 
+            render={ (props) => <CreateGroupChat {...props} /> } 
+          />
+          <ProtectedRoute 
+            path="/list" 
+            render={(props) => <GroupChatList {...props} /> }
+          />
+          <ProtectedRoute 
+            path="/room-chat" 
+            render={ (props) => <RoomChat {...props} /> }
+          />
+          <Route path="*" component={() => "404 NOT FOUND"} />
+        </Switch>
+      </div>
     </Router>
   );
 }
@@ -65,34 +79,30 @@ const Nav = ({ setIsAuth }) => {
 
   const onLogout = () => {
     Auth.logout(() => {
-      localStorage.removeItem('token');
       setIsAuth(false);
-      history.replace('/login');
+      localStorage.removeItem('token');
+      history.replace("/login")
     });
   }
-
   return (
-    <div>
-      <div className="shadow p-4">
-        <nav className="font-mono text-gray-600">
-          <ul className="flex items-center">
-            <li className="mr-6 hover:text-blue-300 px-4 py-2">
-              <Link to="/">Home</Link>
-            </li>
-            <li className="mr-6 hover:text-blue-300 px-4 py-2">
-              <Link to="/create">Create new group</Link>
-            </li>
-            <li className="mr-6 hover:text-blue-300">
-              <Link to="/list">Chat list</Link>
-            </li>
-            <li className="h-8 w-px mx-2 bg-gray-500">
-            </li>
-            <li className="mr-6">
-              <button className="rounded px-4 py-2 hover:bg-red-300 hover:text-white transition duration-300 ease-in-out" onClick={ onLogout }>Logout</button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+    <div className="bg-gray-100 p-4">
+      <nav>
+        <ul className="flex">
+          <li className="mr-6">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="mr-6">
+            <Link to="/create">Create new group</Link>
+          </li>
+          <li className="mr-6">
+            <Link to="/list">Chat list</Link>
+          </li>
+          <li className="mr-6">
+            <button onClick={onLogout}>Logout</button>
+          </li>
+ 
+        </ul>
+      </nav>
     </div>
   )
 }
