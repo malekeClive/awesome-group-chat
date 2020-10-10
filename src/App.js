@@ -38,7 +38,7 @@ function App() {
 
   return (
     <Router>
-      <div className="container">
+      <div>
         {isAuth ? 
           <Nav setIsAuth={setIsAuth} />
         :

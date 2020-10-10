@@ -27,7 +27,6 @@ export default function RoomChat(props) {
     });
 
     socket.on('chat-message', message => {
-      console.log("==========", message);
       dispatch(actionStoreChat(message))
     });
   }, [])
@@ -44,7 +43,7 @@ export default function RoomChat(props) {
 
   return (
     <div className="overflow-hidden">
-      <div className="relative -right-30 overflow-y-scroll">
+      <div className="relative overflow-y-scroll">
         <div className="flex flex-col my-16 px-8 py-4">
           {
             chatList.map(( chat, idx ) => (
@@ -67,16 +66,16 @@ export default function RoomChat(props) {
       </div>
 
       {/* Bottom Chat */}
-      <div className="fixed inset-x-0 bottom-0 bg-gray-300 px-8 py-4">
-        <div className="rounded-full bg-white p-4">
+      <div className="fixed flex flex-row items-center content-between inset-x-0 bottom-0 bg-gray-300 px-8 py-4">
+        <div className="rounded-full bg-white p-4 w-full ">
           <input 
-            className="w-full focus:outline-none"
+            className="w-full focus:outline-none font-mono text-lg text-gray-800"
             type="text" 
             value={chatText} 
             onChange={e => setChatText(e.target.value)} />
         </div>
-        <div>
-          <button onClick={ onSendChat }>Send</button>
+        <div className="mx-6">
+          <button className="font-mono font-bold text-xl text-gray-800" onClick={ onSendChat }>Send</button>
         </div>
       </div>
     </div>
@@ -85,18 +84,20 @@ export default function RoomChat(props) {
 
 const ChatBubble = ({ chat }) => {
   return (
-    <div className="m-1">
-      <div className={`rounded-lg p-2 float-${false ? 'left' : 'right'} border border-black w-1/2`}>
-        <div className="bg-gray-500">
-          <div className="p-2">
-            <h4>
-              {chat.name}
+    <div className="m-1 text-gray-800">
+      <div className={`shadow-md rounded-lg p-4 float-${chat.isYou ? 'left' : 'right'}`}>
+        <div className="border-b-2">
+          <div>
+            <h4 className="font-mono text-xl">
+              { chat.name }
             </h4>
           </div>
         </div>
 
-        <div className="p-2 bg-gray-600">
-          {chat.msg}
+        <div className="mt-2">
+          <p className="font-mono text-lg">
+            { chat.msg }
+          </p>
         </div>
       </div>
     </div>
