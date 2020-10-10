@@ -1,65 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
 
-export default function RoomChat({ closeChatRoom, room }) {
+import { actionStoreChat } from '../actions/actionChat';
+
+import socket from '../socket';
+
+export default function RoomChat(props) {
   const [ chatText, setChatText ] = useState("");
-  const [ chats, setChats ] = useState([
-    {
-      isMe: true,
-      name: "clive",
-      msg: "y",
-    },
-    {
-      isMe: false,
-      name: "pevita",
-      msg: "hallo ganteng "
-    },
-  ]);
+  const [ room, setRoom ] = useState({});
+
+  const rooms     = useSelector((store) => store.rooms);
+  const chatList  = useSelector((store) => store.chats);
+  const roomId    = useSelector((store) => store.roomId);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const room = rooms.find(room => room.roomId === roomId);
+    setRoom(room);
+  }, [rooms, roomId]);
+
+  useEffect(() => {
+    socket.emit('roomId', { roomId: roomId})
+    socket.on('message', message => {
+      console.log(message);
+    });
+
+    socket.on('chat-message', message => {
+      console.log("==========", message);
+      dispatch(actionStoreChat(message))
+    });
+  }, [])
+
+
+  const closeChatRoom = () => {
+    socket.emit('disconnect');
+    props.history.push("/list");
+  }
+
+  const onSendChat = () => {
+    socket.emit('chat', { roomId: roomId, name: "clive", msg: chatText });
+  }
 
   return (
-    <div>
-      <div className="flex flex-row items-center bg-gray-200">
-        <div>
-          <button className="m-2 px-4 py-2 bg-blue-300" onClick={() => closeChatRoom()}>&lt;</button>
-        </div>
-        <div>
-          <h2>{room.groupName}</h2>
+    <div className="overflow-hidden">
+      <div className="relative -right-30 overflow-y-scroll">
+        <div className="flex flex-col my-16 px-8 py-4">
+          {
+            chatList.map(( chat, idx ) => (
+              <ChatBubble key={ idx } chat={ chat } />
+            ))
+          }
         </div>
       </div>
 
-      <div className="flex flex-col m-8">
-        {
-          chats.map((chat, idx) => {
-            if (chat.isMe) {
-              return (
-                <div className="relative mt-4">
-                  <div className="left-0 p-4 w-1/2 bg-blue-300">
-                    <div className="mb-4">
-                      {chat.name}
-                    </div>
-                    <div>
-                      {chat.msg}
-                    </div>
-                  </div>
-                </div>
-              )
-            } else {
-              return (
-                <div className="relative mt-4">
-                  <div className="rounded-full absolute p-4 w-1/2 right-0 bg-gray-300">
-                    <div className="mb-4">
-                      {chat.name}
-                    </div>
-                    <div>
-                      {chat.msg}
-                    </div>
-                  </div>
-                </div>
-              )
-            }
-          })
-        }
+      {/* Top header */}
+      <div className="fixed inset-x-0 top-0">
+        <div className="flex flex-row items-center bg-gray-200">
+          <div>
+            <button className="px-8 py-4 bg-gray-300 mr-4 hover:bg-gray-400" onClick={() => closeChatRoom()}>Back</button>
+          </div>
+          <div>
+            <h2 className="text-gray-700">{ room ? room.roomName : null }</h2>
+          </div>
+        </div>
       </div>
 
+      {/* Bottom Chat */}
       <div className="fixed inset-x-0 bottom-0 bg-gray-300 px-8 py-4">
         <div className="rounded-full bg-white p-4">
           <input 
@@ -67,6 +74,29 @@ export default function RoomChat({ closeChatRoom, room }) {
             type="text" 
             value={chatText} 
             onChange={e => setChatText(e.target.value)} />
+        </div>
+        <div>
+          <button onClick={ onSendChat }>Send</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const ChatBubble = ({ chat }) => {
+  return (
+    <div className="m-1">
+      <div className={`rounded-lg p-2 float-${false ? 'left' : 'right'} border border-black w-1/2`}>
+        <div className="bg-gray-500">
+          <div className="p-2">
+            <h4>
+              {chat.name}
+            </h4>
+          </div>
+        </div>
+
+        <div className="p-2 bg-gray-600">
+          {chat.msg}
         </div>
       </div>
     </div>

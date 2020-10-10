@@ -1,84 +1,110 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link, useHistory } from 'react-router-dom';
+import axios from 'axios';
 import './App.css';
 import './tailwind.output.css';
+
+import Auth from './Components/auth';
+import ProtectedRoute from './Components/ProtectedRoute';
+import UnprotectedRoute from './Components/UnprotectedRoute';
 
 import Home from './Components/Home';
 import CreateGroupChat from './Components/CreateGroupChat';
 import GroupChatList from './Components/GroupChatList';
+import Login from './Components/Login';
 import RoomChat from './Components/RoomChat';
 
-function App() {
-  const [ chatList, setChatList ] = useState([{
-    groupName: "test1",
-    password: 123,
-    confirmPassword: 123,
-  }]);
+const apiURL = 'http://localhost:5000';
 
-  const [ room, setRoom ] = useState({});
+axios.interceptors.request.use(
+  config => {
+    const { origin } = new URL(config.url);
+    const allowedOrigins = [apiURL];
+    const token = localStorage.getItem('token');
 
-  const [ showChat, setShowChat ] = useState(false);
-
-  const openChatRoom = (groupId=null) => {
-    let isChatOpen = true;
-    
-    if (groupId === null) {
-      isChatOpen = false;
-    } else {
-      const getRoomChat = chatList.find((room, idx) => idx === groupId);
-      setRoom(getRoomChat);
+    if (allowedOrigins.includes(origin)) {
+      config.headers.authorization = `Bearer ${token}`;
     }
 
-    return setShowChat(isChatOpen);
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
   }
+)
 
-  const createNewChatGroup = (newList) => {
-    const newGroupList = [...chatList, newList]
-    setChatList(newGroupList);
-  }
+function App() {
+  const [ isAuth, setIsAuth ] = useState(Auth.isAuthenticated());
 
   return (
     <Router>
-      <RoomChat closeChatRoom={openChatRoom} room={room} />
-
-      {/* {
-        showChat ? 
-        <RoomChat closeChatRoom={openChatRoom} room={room} />
+      <div className="container">
+        {isAuth ? 
+          <Nav setIsAuth={setIsAuth} />
         :
-        <div className="container mx-auto p-4">
-          <div className="bg-gray-100 p-4">
-            <nav>
-              <ul className="flex">
-                <li className="mr-6">
-                  <Link to="/">Home</Link>
-                </li>
-                <li className="mr-6">
-                  <Link to="/create">Create new group</Link>
-                </li>
-                <li className="mr-6">
-                  <Link to="/list">Chat list</Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          null
+        }
 
-          <div className="mt-4">
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route path="/create">
-                <CreateGroupChat createNewChatGroup={createNewChatGroup} />
-              </Route>
-              <Route path="/list">
-                <GroupChatList chatList={chatList} openChatRoom={openChatRoom} />
-              </Route>
-            </Switch>
-          </div>
-        </div>
-      } */}
+        <Switch>
+          <UnprotectedRoute 
+            path="/login" 
+            render={ (props) => <Login {...props} setIsAuth={setIsAuth} /> } 
+          />
+          <ProtectedRoute 
+            exact 
+            path="/" 
+            render={ (props) => <Home {...props} /> } 
+          />
+          <ProtectedRoute 
+            path="/create" 
+            render={ (props) => <CreateGroupChat {...props} /> } 
+          />
+          <ProtectedRoute 
+            path="/list" 
+            render={(props) => <GroupChatList {...props} /> }
+          />
+          <ProtectedRoute 
+            path="/room-chat" 
+            render={ (props) => <RoomChat {...props} /> }
+          />
+          <Route path="*" component={() => "404 NOT FOUND"} />
+        </Switch>
+      </div>
     </Router>
   );
+}
+
+const Nav = ({ setIsAuth }) => {
+  const history = useHistory();
+
+  const onLogout = () => {
+    Auth.logout(() => {
+      setIsAuth(false);
+      localStorage.removeItem('token');
+      history.replace("/login")
+    });
+  }
+  return (
+    <div className="bg-gray-100 p-4">
+      <nav>
+        <ul className="flex">
+          <li className="mr-6">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="mr-6">
+            <Link to="/create">Create new group</Link>
+          </li>
+          <li className="mr-6">
+            <Link to="/list">Chat list</Link>
+          </li>
+          <li className="mr-6">
+            <button onClick={onLogout}>Logout</button>
+          </li>
+ 
+        </ul>
+      </nav>
+    </div>
+  )
 }
 
 export default App;
