@@ -1,67 +1,42 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-export default function CreateGroupChat({ createNewChatGroup }) {
+export default function CreateGroupChat({ setChatList }) {
   const [ groupName, setGroupName ] = useState("");
-  const [ password, setPassword ]   = useState("");
-  const [ confirmPassword, setConfirmPassword ] = useState("");
-  const disableSubmitBtn = useRef(null);
-
-  useEffect(() => {
-    const createBtnValidate = () => {
-      if (groupName.match(/^ *$/) !== null || password.match(/^ *$/) !== null || confirmPassword.match(/^ *$/) !== null) {
-        disableSubmitBtn.current.disabled             = true;
-        disableSubmitBtn.current.style.opacity        = "0.5";
-        disableSubmitBtn.current.style.cursor         = "default";
-        disableSubmitBtn.current.style.pointerEvents  = "none"; // disable hover and other pointer events
-      } else {
-        disableSubmitBtn.current.disabled             = false;
-        disableSubmitBtn.current.style.opacity        = "1";
-        disableSubmitBtn.current.style.cursor         = "pointer";
-        disableSubmitBtn.current.style.pointerEvents  = "auto"; // disable hover and other pointer events
-      }
-
-    }
     
-    createBtnValidate();
-  }, [ groupName, password, confirmPassword ]);
-
   const onCreateNewGroup = (e) => {
     e.preventDefault();
 
     const form = {
-      groupName,
-      password,
-      confirmPassword
+      groupName: groupName,
+      member: 10,
+      roleId: 1
     }
+
+    axios.post('http://localhost:5000/api/chat/create', form)
+      .then(response => {
+        console.log(response.data);
+        setGroupName("");
+      }).catch(err => {
+        console.log(err);
+      })
     
-    createNewChatGroup(form);
-    
-    setGroupName("");
-    setPassword("");
-    setConfirmPassword("");
+    // setChatList(newGroupList); // push to state
   }
 
   return (
-    <div >
+    <div className="w-2/5 my-0 mx-auto">
       <div>
         <form onSubmit={onCreateNewGroup}>
           <div className="mt-4">
-            <label className="block">Group name</label>
-            <input className="border border-gray-300 rounded focus:outline-none focus:bg-gray-100 mt-2 px-2 py-1" type="text" value={groupName} onChange={e => setGroupName(e.target.value)} />
-          </div>
-
-          <div className="mt-4">
-            <label className="block">Password</label>
-            <input className="border border-gray-300 rounded focus:outline-none focus:bg-gray-100 mt-2 px-2 py-1" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-          </div>
-
-          <div className="mt-4">
-            <label className="block">Confirm password</label>
-            <input className={`border border-gray-300 rounded focus:outline-none focus:bg-${password === confirmPassword ? "gray" : "red"}-100 mt-2 px-2 py-1`} type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+            <label className="block mb-2 text-gray-600 font-mono">
+              <h3 className="text-2xl">Group name</h3>
+            </label>
+            <input className="w-full shadow rounded focus:outline-none focus:bg-gray-100 px-2 py-2" type="text" value={groupName} onChange={e => setGroupName(e.target.value)} />
           </div>
 
           <div className="block mt-4">
-            <input ref={disableSubmitBtn} className="cursor-pointer border border-none rounded bg-blue-300 hover:bg-blue-400 px-4 py-1 font-bold text-white" type="submit" value="Create" />
+            <input className="cursor-pointer border hover:border-transparent hover:text-white hover:bg-blue-300 bg-transparent rounded px-4 py-1 text-gray-600 font-mono transition duration-300 ease-in-out" type="submit" value="Create" />
           </div>
         </form>
       </div>

@@ -9,7 +9,10 @@ export default function GroupChatList({ chatList }) {
     <div>
       {
         chatList.length === 0 ?
-          <div>Empty group</div>
+          <div classname="m-4 bg-gray-400">
+            <div>Empty group</div>
+            <div>Create new</div>
+          </div>
         :
         chatList.map((group, idx) => (
           <div key={idx} className="flex flex-col bg-gray-300 my-2 p-2 cursor-pointer hover:bg-gray-400" onClick={() => openChatRoom(idx)}>
