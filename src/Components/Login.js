@@ -21,12 +21,14 @@ export default function Login(props) {
   
       axios.post(`http://localhost:5000`, data)
         .then(res => {
+          auth.user = auth.setUser(res.data.auth);
           auth.login(() => {
             props.setIsAuth(true);
             localStorage.setItem('token', res.data.auth);
             props.history.replace("/")
           });
         }).catch(err => {
+          console.log(err)
           if (err.response.status === 406) {
             alert(err.response.data.message);
           } else {

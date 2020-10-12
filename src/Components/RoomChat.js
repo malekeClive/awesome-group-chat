@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 
 import { actionStoreChat } from '../actions/actionChat';
+import auth from './auth';
 
 import socket from '../socket';
 
@@ -21,14 +22,25 @@ export default function RoomChat(props) {
   }, [rooms, roomId]);
 
   useEffect(() => {
+    // emmiter(s)
     socket.emit('roomId', { roomId: roomId})
-    socket.on('message', message => {
-      console.log(message);
-    });
 
-    socket.on('chat-message', message => {
-      dispatch(actionStoreChat(message))
-    });
+    const logMsg = (msg) => {
+      console.log(msg);
+    }
+    
+    const dispatchMsg = (msg) => {
+      dispatch(actionStoreChat(msg))
+    }
+
+    // listener(s)
+    socket.on('message', logMsg);
+    socket.on('chat-message', dispatchMsg);
+
+    return () => {
+      socket.off('message', logMsg);
+      socket.off('chat-message', dispatchMsg);
+    }
   }, [])
 
 
@@ -38,7 +50,12 @@ export default function RoomChat(props) {
   }
 
   const onSendChat = () => {
-    socket.emit('chat', { roomId: roomId, name: "clive", msg: chatText });
+    socket.emit('chat', { 
+      roomId: roomId,
+      uId: auth.user.userId, 
+      name: auth.user.username, 
+      msg: chatText 
+    });
   }
 
   return (
@@ -85,7 +102,7 @@ export default function RoomChat(props) {
 const ChatBubble = ({ chat }) => {
   return (
     <div className="m-1 text-gray-800">
-      <div className={`shadow-md rounded-lg p-4 float-${chat.isYou ? 'left' : 'right'}`}>
+      <div className={`shadow-md rounded-lg p-4 float-${chat.uId !== auth.userId ? 'left' : 'right'}`}>
         <div className="border-b-2">
           <div>
             <h4 className="font-mono text-xl">
