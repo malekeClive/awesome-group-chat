@@ -1,21 +1,19 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
+import { URL, PORT } from '../utils/url';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllRoomByUser } from '../actions/actionRooms';
-import { getChat } from '../actions/actionChat';
 import { getRoomId } from '../actions/actionRoomId';
 import { useHistory } from 'react-router-dom';
-import socket from '../socket';
 
 export default function GroupChatList() {
-  
   const roomList  = useSelector((store) => store.rooms);
   const dispatch  = useDispatch();
   const history   = useHistory();
 
   useEffect(() => {
     try {
-      axios('http://localhost:5000/api/chat/getAll')
+      axios(`${URL}:${PORT}/api/chat/getAll`)
         .then(response => {
           dispatch(getAllRoomByUser(response.data.data));
         })

@@ -4,7 +4,7 @@ import jwt_decode from 'jwt-decode';
 class Auth {
  constructor() {
   this.authenticated = this.tokenCheck();
-  this.user          = this.tokenCheck() ? this.setUser(localStorage.getItem('token')) : {};
+  this.user = JSON.parse(localStorage.getItem('user'));
  }
 
  tokenCheck() {
@@ -14,14 +14,15 @@ class Auth {
   return false;
  }
 
- setUser(jwtAuth) {
+ storeUser(jwtAuth) {
   const decoded = jwt_decode(jwtAuth).data[0];
   const user = {
     userId: decoded.user_id,
     email: decoded.email,
     username: decoded.username
   }
-  return user;
+
+  localStorage.setItem('user', JSON.stringify(user));
  }
 
  login(cb) {
@@ -31,6 +32,8 @@ class Auth {
 
  logout(cb) {
    this.authenticated = false;
+   localStorage.removeItem('token');
+   localStorage.removeItem('user');
    cb();
  }
 

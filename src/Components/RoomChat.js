@@ -5,6 +5,7 @@ import { actionStoreChat } from '../actions/actionChat';
 import auth from './auth';
 
 import socket from '../socket';
+import ChatBubble from './ChatBubble';
 
 export default function RoomChat(props) {
   const [ chatText, setChatText ] = useState("");
@@ -14,7 +15,10 @@ export default function RoomChat(props) {
   const chatList  = useSelector((store) => store.chats);
   const roomId    = useSelector((store) => store.roomId);
 
-  const dispatch = useDispatch();
+  const dispatch  = useDispatch();
+
+  const chatListByRoomId = chatList.filter(chat => chat.roomId === roomId);
+
 
   useEffect(() => {
     const room = rooms.find(room => room.roomId === roomId);
@@ -56,6 +60,8 @@ export default function RoomChat(props) {
       name: auth.user.username, 
       msg: chatText 
     });
+
+    setChatText("");
   }
 
   return (
@@ -63,7 +69,7 @@ export default function RoomChat(props) {
       <div className="relative overflow-y-scroll">
         <div className="flex flex-col my-16 px-8 py-4">
           {
-            chatList.map(( chat, idx ) => (
+            chatListByRoomId.map(( chat, idx ) => (
               <ChatBubble key={ idx } chat={ chat } />
             ))
           }
@@ -71,13 +77,14 @@ export default function RoomChat(props) {
       </div>
 
       {/* Top header */}
-      <div className="fixed inset-x-0 top-0">
-        <div className="flex flex-row items-center bg-gray-200">
+      <div className="fixed inset-x-0 top-0 p-4 shadow bg-white text-xl text-gray-700">
+        <div className="flex flex-row items-center">
           <div>
-            <button className="px-8 py-4 bg-gray-300 mr-4 hover:bg-gray-400" onClick={() => closeChatRoom()}>Back</button>
+            <button className="px-4 py-2 mr-4 hover:text-red-400 outline-none" onClick={() => closeChatRoom()}>back</button>
           </div>
+          <div className="h-10 mr-6 w-1 rounded bg-gray-500"></div>
           <div>
-            <h2 className="text-gray-700">{ room ? room.roomName : null }</h2>
+            <h2 className="">{ room ? room.roomName : null }</h2>
           </div>
         </div>
       </div>
@@ -93,28 +100,6 @@ export default function RoomChat(props) {
         </div>
         <div className="mx-6">
           <button className="font-mono font-bold text-xl text-gray-800" onClick={ onSendChat }>Send</button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-const ChatBubble = ({ chat }) => {
-  return (
-    <div className="m-1 text-gray-800">
-      <div className={`shadow-md rounded-lg p-4 float-${chat.uId !== auth.userId ? 'left' : 'right'}`}>
-        <div className="border-b-2">
-          <div>
-            <h4 className="font-mono text-xl">
-              { chat.name }
-            </h4>
-          </div>
-        </div>
-
-        <div className="mt-2">
-          <p className="font-mono text-lg">
-            { chat.msg }
-          </p>
         </div>
       </div>
     </div>

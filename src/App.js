@@ -1,35 +1,29 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+
 import './App.css';
 import './tailwind.output.css';
 
-import Auth from './Components/auth';
-import ProtectedRoute from './Components/ProtectedRoute';
-import UnprotectedRoute from './Components/UnprotectedRoute';
+import ProtectedRoute from './helpers/ProtectedRoute';
+import UnprotectedRoute from './helpers/UnprotectedRoute';
 
+import Auth from './Components/auth';
 import Home from './Components/Home';
 import CreateGroupChat from './Components/CreateGroupChat';
 import GroupChatList from './Components/GroupChatList';
 import Login from './Components/Login';
 import RoomChat from './Components/RoomChat';
+import Nav from './Components/Nav';
 
-const apiURL = 'http://localhost:5000';
-
-axios.interceptors.request.use(
-  config => {
-    const { origin } = new URL(config.url);
-    const allowedOrigins = [apiURL];
+axios.interceptors.request.use( config => {
     const token = localStorage.getItem('token');
-
-    if (allowedOrigins.includes(origin)) {
-      config.headers.authorization = `Bearer ${token}`;
-    }
-
+    config.headers.authorization = `Bearer ${token}`;
     return config;
   },
   error => {
-    return Promise.reject(error);
+    console.log("ERROR: ", error);
+    return error;
   }
 )
 
@@ -40,7 +34,7 @@ function App() {
     <Router>
       <div>
         {isAuth ? 
-          <Nav setIsAuth={setIsAuth} />
+        <Nav setIsAuth={setIsAuth} />
         :
           null
         }
@@ -72,39 +66,6 @@ function App() {
       </div>
     </Router>
   );
-}
-
-const Nav = ({ setIsAuth }) => {
-  const history = useHistory();
-
-  const onLogout = () => {
-    Auth.logout(() => {
-      setIsAuth(false);
-      localStorage.removeItem('token');
-      history.replace("/login")
-    });
-  }
-  return (
-    <div className="bg-gray-100 p-4">
-      <nav>
-        <ul className="flex">
-          <li className="mr-6">
-            <Link to="/">Home</Link>
-          </li>
-          <li className="mr-6">
-            <Link to="/create">Create new group</Link>
-          </li>
-          <li className="mr-6">
-            <Link to="/list">Chat list</Link>
-          </li>
-          <li className="mr-6">
-            <button onClick={onLogout}>Logout</button>
-          </li>
- 
-        </ul>
-      </nav>
-    </div>
-  )
 }
 
 export default App;

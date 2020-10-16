@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { URL, PORT } from '../utils/url';
 
 import auth from './auth';
 
@@ -7,35 +8,32 @@ export default function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onLogin = async (e) => {
+  const onLogin = (e) => {
     e.preventDefault();
 
-    auth.login(() => {
-      // validate
-      if (email === "" || password === "") {
-        alert('value cannot be null');
-        return;
-      }
-  
-      const data = {email, password};
-  
-      axios.post(`http://localhost:5000`, data)
-        .then(res => {
-          auth.user = auth.setUser(res.data.auth);
-          auth.login(() => {
-            props.setIsAuth(true);
-            localStorage.setItem('token', res.data.auth);
-            props.history.replace("/")
-          });
-        }).catch(err => {
-          console.log(err)
-          if (err.response.status === 406) {
-            alert(err.response.data.message);
-          } else {
-            console.log(err);
-          }
+    // validate
+    if (email === "" || password === "") {
+      alert('value cannot be null');
+      return;
+    }
+
+    const data = {email, password};
+    axios.post(`${URL}:${PORT}/`, data)
+      .then(res => {
+        auth.storeUser(res.data.auth);
+        auth.login(() => {
+          props.setIsAuth(true);
+          localStorage.setItem('token', res.data.auth);
+          props.history.replace("/")
         });
-    });
+      }).catch(err => {
+        console.log(err)
+        if (err.response.status === 406) {
+          alert(err.response.data.message);
+        } else {
+          console.log(err);
+        }
+      });
   }
 
   return (
