@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 export default function GroupChatList() {
   const roomList  = useSelector((store) => store.rooms);
+  const chatList  = useSelector((store) => store.chats);
   const dispatch  = useDispatch();
   const history   = useHistory();
 
@@ -16,7 +17,7 @@ export default function GroupChatList() {
       axios(`${URL}:${PORT}/api/chat/getAll`)
         .then(response => {
           dispatch(getAllRoomByUser(response.data.data));
-        })
+        });
     } catch (error) {
       console.log(error);
     }
@@ -28,9 +29,6 @@ export default function GroupChatList() {
     } else {
       const getRoomChat = roomList.find(room => room.roomId === groupId);
       dispatch(getRoomId(getRoomChat.roomId));
-      // socket.on('message', (res) => {
-      //   dispatch(getChat(res));
-      // });
       history.push("/room-chat");
     }
   }
@@ -41,7 +39,7 @@ export default function GroupChatList() {
         <div className="grid lg:grid-cols-4">
           {
             roomList.map(room => (
-              <Room key={ room.roomId } room={room} chatRoomHandler={chatRoomHandler} />
+              <Room key={ room.roomId } chatList={chatList} room={room} chatRoomHandler={chatRoomHandler} />
             ))
           }
         </div>
@@ -58,7 +56,13 @@ export default function GroupChatList() {
   )
 }
 
-const Room = ({ room, chatRoomHandler }) => {
+const Room = ({ room, chatList, chatRoomHandler }) => {
+  const getLastChat = (roomId) => {
+    const filterMsg = chatList.filter(chat => chat.roomId === roomId);
+    const latestMsg = filterMsg[ filterMsg.length - 1 ];
+    return latestMsg;
+  }
+  
   return (
     <div 
       className="flex flex-col rounded m-4 shadow-md cursor-pointer hover:bg-gray-300" 
@@ -70,7 +74,7 @@ const Room = ({ room, chatRoomHandler }) => {
       </div>
       <div className="p-4">
         <p className="text-xs sm:text-sm">
-          asdasdkjasldkjalkzncxznxcnaq...
+          {/* asdasdkjasldkjalkzncxznxcnaq... */}
         </p>
       </div>
     </div>

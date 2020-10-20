@@ -11,9 +11,9 @@ export default function RoomChat(props) {
   const [ chatText, setChatText ] = useState("");
   const [ room, setRoom ] = useState({});
 
-  const rooms     = useSelector((store) => store.rooms);
-  const chatList  = useSelector((store) => store.chats);
-  const roomId    = useSelector((store) => store.roomId);
+  const rooms     = useSelector(store => store.rooms);
+  const chatList  = useSelector(store => store.chats);
+  const roomId    = useSelector(store => store.roomId);
 
   const dispatch  = useDispatch();
 
@@ -57,7 +57,7 @@ export default function RoomChat(props) {
     socket.emit('chat', { 
       roomId: roomId,
       uId: auth.user.userId, 
-      name: auth.user.username, 
+      name: auth.user.userId, 
       msg: chatText 
     });
 
@@ -66,16 +66,6 @@ export default function RoomChat(props) {
 
   return (
     <div className="overflow-hidden">
-      <div className="relative overflow-y-scroll">
-        <div className="flex flex-col my-16 px-8 py-4">
-          {
-            chatListByRoomId.map(( chat, idx ) => (
-              <ChatBubble key={ idx } chat={ chat } />
-            ))
-          }
-        </div>
-      </div>
-
       {/* Top header */}
       <div className="fixed inset-x-0 top-0 p-4 shadow bg-white text-xl text-gray-700">
         <div className="flex flex-row items-center">
@@ -86,6 +76,16 @@ export default function RoomChat(props) {
           <div>
             <h2 className="">{ room ? room.roomName : null }</h2>
           </div>
+        </div>
+      </div>
+
+      <div className="relative overflow-y-scroll">
+        <div className="flex flex-col my-16 px-8 py-4">
+          {
+            chatListByRoomId.map(( chat, idx ) => (
+              <ChatBubble key={ idx } chat={ chat } />
+            ))
+          }
         </div>
       </div>
 

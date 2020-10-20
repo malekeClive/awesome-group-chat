@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { URL, PORT } from '../utils/url';
-
 import auth from './auth';
+import jwt_decode from 'jwt-decode';
+
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../actions/actionUser';
 
 export default function Login(props) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [ email, setEmail ]       = useState("");
+  const [ password, setPassword ] = useState("");
+
+  const storeUser = useDispatch();
 
   const onLogin = (e) => {
     e.preventDefault();
@@ -20,10 +25,10 @@ export default function Login(props) {
     const data = {email, password};
     axios.post(`${URL}:${PORT}/`, data)
       .then(res => {
-        auth.storeUser(res.data.auth);
-        auth.login(() => {
+        auth.login( () => {
           props.setIsAuth(true);
           localStorage.setItem('token', res.data.auth);
+          convertJWTtoObj(res.data.auth);
           props.history.replace("/")
         });
       }).catch(err => {
@@ -34,6 +39,16 @@ export default function Login(props) {
           console.log(err);
         }
       });
+  }
+
+  const convertJWTtoObj = (jwtUser) => {
+    const decoded = jwt_decode(jwtUser).data[0];
+    const user = {
+      userId: decoded.user_id,
+      email: decoded.email,
+      username: decoded.username
+    }
+    storeUser(setUserData(user));
   }
 
   return (

@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { URL, PORT } from '../utils/url';
 
 export default function Home() {
-  const [ roomId, setRoomId ] = useState('');
+  const [ roomId, setRoomId ] = useState("");
 
-  const findRoom = (e) => {
+  const findRoom = async (e) => {
     e.preventDefault();
-
-    console.log("Asda");
+    try {
+      const sendData = await axios.post(`${URL}:${PORT}/api/chat/join`, {roomId: roomId});
+      console.log(sendData.data);
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   return (
