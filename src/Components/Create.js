@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { URL, PORT } from '../utils/url';
 
-export default function CreateGroupChat() {
+export default function Create() {
   const [ groupName, setGroupName ] = useState("");
 
   const onCreateNewGroup = (e) => {
@@ -22,20 +22,20 @@ export default function CreateGroupChat() {
   }
 
   return (
-    <div className="shadow-lg w-1/2 h-64 my-12 mx-auto">
+    <div className="bg-gray-900 shadow-inner rounded w-1/2 h-64 my-12 mx-auto">
       <div className="p-12">
-        <h3 className="text-gray-600 text-3xl mb-4">Group name</h3>
+        <h3 className="text-gray-600 text-3xl mb-4">Group Name</h3>
         <form onSubmit={onCreateNewGroup}>
           <div className="mb-3">
             <input 
-              className="shadow w-full px-3 py-2 outline-none bg-gray-100"
+              className="bg-gray-700 w-full px-3 py-2 outline-none rounded text-gray-400"
               type="text" 
               value={groupName} 
               onChange={(e) => setGroupName(e.target.value)} />
           </div>
           <div>
             <input 
-              className="float-right px-3 py-2 rounded cursor-pointer bg-blue-300 bg-transparent font-sans font-bold text-white"
+              className="w-24 float-right px-3 py-2 rounded cursor-pointer bg-purple-800 hover:bg-purple-900 bg-transparent font-sans text-gray-300"
               type="submit" 
               value="Create" />
           </div>

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 
-import { actionStoreChat } from '../actions/actionChat';
-import auth from './auth';
+import { actionStoreChat } from '../../actions/actionChat';
 
-import socket from '../socket';
+import socket from '../../socket';
 import ChatBubble from './ChatBubble';
 
 export default function RoomChat(props) {
   const [ chatText, setChatText ] = useState("");
   const [ room, setRoom ] = useState({});
+
+  const user    = useSelector(store => store.user);
 
   const rooms     = useSelector(store => store.rooms);
   const chatList  = useSelector(store => store.chats);
@@ -56,8 +57,8 @@ export default function RoomChat(props) {
   const onSendChat = () => {
     socket.emit('chat', { 
       roomId: roomId,
-      uId: auth.user.userId, 
-      name: auth.user.userId, 
+      uId: user.userId, 
+      name: user.username, 
       msg: chatText 
     });
 
@@ -67,12 +68,12 @@ export default function RoomChat(props) {
   return (
     <div className="overflow-hidden">
       {/* Top header */}
-      <div className="fixed inset-x-0 top-0 p-4 shadow bg-white text-xl text-gray-700">
+      <div className="fixed inset-x-0 top-0 p-4 bg-gray-900 shadow-inner text-xl text-gray-600">
         <div className="flex flex-row items-center">
           <div>
             <button className="px-4 py-2 mr-4 hover:text-red-400 outline-none" onClick={() => closeChatRoom()}>back</button>
           </div>
-          <div className="h-10 mr-6 w-1 rounded bg-gray-500"></div>
+          <div className="h-10 mr-6 w-px rounded bg-gray-600"></div>
           <div>
             <h2 className="">{ room ? room.roomName : null }</h2>
           </div>
@@ -90,16 +91,16 @@ export default function RoomChat(props) {
       </div>
 
       {/* Bottom Chat */}
-      <div className="fixed flex flex-row items-center content-between inset-x-0 bottom-0 bg-gray-300 px-8 py-4">
-        <div className="rounded-full bg-white p-4 w-full ">
+      <div className="fixed flex flex-row items-center content-between inset-x-0 bottom-0 bg-gray-900 shadow-inner  px-8 py-4">
+        <div className="rounded-full bg-gray-800 p-4 w-full ">
           <input 
-            className="w-full focus:outline-none font-mono text-lg text-gray-800"
+            className="w-full focus:outline-none font-mono text-lg text-gray-400 bg-gray-800"
             type="text" 
             value={chatText} 
             onChange={e => setChatText(e.target.value)} />
         </div>
         <div className="mx-6">
-          <button className="font-mono font-bold text-xl text-gray-800" onClick={ onSendChat }>Send</button>
+          <button className="font-mono font-bold text-xl text-gray-300 hover:text-purple-500" onClick={ onSendChat }>Send</button>
         </div>
       </div>
     </div>

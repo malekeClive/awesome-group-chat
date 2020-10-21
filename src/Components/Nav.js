@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 export default function Nav({ setIsAuth }) {
-  const listStyling = `mr-6 hover:text-blue-300`;
+  const listStyling = `mr-6 hover:text-gray-300`;
   const history = useHistory();
   const user    = useSelector(store => store.user);
 
@@ -16,11 +16,11 @@ export default function Nav({ setIsAuth }) {
   }
 
   return (
-    <div className="bg-white shadow p-4 font-sans text-xl text-gray-700 w-full flex items-center justify-between">
+    <div className="bg-gray-900 shadow-inner p-4 font-sans text-xl text-gray-600 w-full flex items-center justify-between">
       <nav className="ml-6">
         <ul className="flex items-center">
           <li className={listStyling}>
-            <Link to="/">Home</Link>
+            <Link to="/">Join room</Link>
           </li>
           <li className={listStyling}>
             <Link to="/create">Create new group</Link>
@@ -28,15 +28,15 @@ export default function Nav({ setIsAuth }) {
           <li className={listStyling}>
             <Link to="/list">Chat list</Link>
           </li>
-          <li className="h-10 mr-6 bg-gray-500 w-1 rounded">
+          <li className="h-10 mr-6 bg-gray-600 w-px rounded">
           </li>
           <li className="mr-6">
-            <button className="rounded hover:bg-red-300 hover:text-white p-2" onClick={onLogout}>Logout</button>
+            <button className="rounded hover:text-red-400 p-2" onClick={onLogout}>Logout</button>
           </li>
         </ul>      
       </nav>
       <h2 className="inline-block mr-8">
-        {user.username}
+        { user.username }
       </h2>
     </div>
   )

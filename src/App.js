@@ -9,11 +9,11 @@ import ProtectedRoute from './helpers/ProtectedRoute';
 import UnprotectedRoute from './helpers/UnprotectedRoute';
 
 import Auth from './Components/auth';
-import Home from './Components/Home';
-import CreateGroupChat from './Components/CreateGroupChat';
-import GroupChatList from './Components/GroupChatList';
+import Join from './Components/Join';
+import Create from './Components/Create';
+import GroupChatList from './Components/Room/GroupChatList';
 import Login from './Components/Login';
-import RoomChat from './Components/RoomChat';
+import RoomChat from './Components/Chat/RoomChat';
 import Nav from './Components/Nav';
 
 axios.interceptors.request.use( config => {
@@ -47,11 +47,11 @@ function App() {
           <ProtectedRoute 
             exact 
             path="/" 
-            render={ (props) => <Home {...props} /> } 
+            render={ (props) => <Join {...props} /> } 
           />
           <ProtectedRoute 
             path="/create" 
-            render={ (props) => <CreateGroupChat {...props} /> } 
+            render={ (props) => <Create {...props} /> } 
           />
           <ProtectedRoute 
             path="/list" 

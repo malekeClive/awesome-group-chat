@@ -1,10 +1,12 @@
 import React from 'react'
-import auth from './auth';
+import { useSelector } from 'react-redux';
 
 export default function ChatBubble({ chat }) {
+  const user  = useSelector(store => store.user);
+
   return (
     <div className="m-1 text-gray-800">
-      <div className={`shadow-md rounded-lg p-4 float-${ chat.uId !== auth.user.userId ? 'left' : 'right' }`}>
+      <div className={`shadow-md rounded-lg p-4 float-${ chat.uId !== user.userId ? 'left' : 'right' }`}>
         <div className="border-b-2">
           <div>
             <h4 className="font-mono text-xl">
