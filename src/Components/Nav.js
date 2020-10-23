@@ -23,7 +23,7 @@ export default function Nav({ setIsAuth }) {
             <Link to="/">Join room</Link>
           </li>
           <li className={listStyling}>
-            <Link to="/create">Create new group</Link>
+            <Link to="/create">Create new room</Link>
           </li>
           <li className={listStyling}>
             <Link to="/list">Chat list</Link>

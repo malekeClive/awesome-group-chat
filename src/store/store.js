@@ -9,7 +9,7 @@ const loadState = () => {
       return undefined;
     }
 
-    const decoded = jwt_decode(localStorage.getItem('token')).data[0];
+    const decoded = jwt_decode(localStorage.getItem('token')).user[0];
     const user = {
       userId: decoded.user_id,
       email: decoded.email,

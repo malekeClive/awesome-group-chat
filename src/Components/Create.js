@@ -24,7 +24,7 @@ export default function Create() {
   return (
     <div className="bg-gray-900 shadow-inner rounded w-1/2 h-64 my-12 mx-auto">
       <div className="p-12">
-        <h3 className="text-gray-600 text-3xl mb-4">Group Name</h3>
+        <h3 className="text-gray-600 text-3xl mb-4">Room Name</h3>
         <form onSubmit={onCreateNewGroup}>
           <div className="mb-3">
             <input 

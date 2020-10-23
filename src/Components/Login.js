@@ -32,7 +32,6 @@ export default function Login(props) {
           props.history.replace("/")
         });
       }).catch(err => {
-        console.log(err)
         if (err.response.status === 406) {
           alert(err.response.data.message);
         } else {
@@ -42,12 +41,13 @@ export default function Login(props) {
   }
 
   const convertJWTtoObj = (jwtUser) => {
-    const decoded = jwt_decode(jwtUser).data[0];
+    const decoded = jwt_decode(jwtUser).user[0];
     const user = {
       userId: decoded.user_id,
       email: decoded.email,
       username: decoded.username
     }
+    console.log(user);
     storeUser(setUserData(user));
   }
 

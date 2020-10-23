@@ -91,7 +91,7 @@ export default function RoomChat(props) {
       </div>
 
       {/* Bottom Chat */}
-      <div className="fixed flex flex-row items-center content-between inset-x-0 bottom-0 bg-gray-900 shadow-inner  px-8 py-4">
+      <div className="fixed flex flex-row items-center content-between inset-x-0 bottom-0 bg-gray-900 px-8 py-4">
         <div className="rounded-full bg-gray-800 p-4 w-full ">
           <input 
             className="w-full focus:outline-none font-mono text-lg text-gray-400 bg-gray-800"
