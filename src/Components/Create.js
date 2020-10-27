@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { URL, PORT } from '../utils/url';
+import Notification from '../helpers/Notification';
+import Loading from '../helpers/Loading';
 
 export default function Create() {
   const [ groupName, setGroupName ] = useState("");
 
   const onCreateNewGroup = (e) => {
     e.preventDefault();
-
+    <Loading loading={true} />
     
     const form = {
       roomName: groupName,
@@ -16,6 +18,7 @@ export default function Create() {
     axios.post(`${URL}:${PORT}/api/chat/create`, form)
       .then(res => {
         console.log(res);
+        // <Notification />
       }).catch(err => {
         console.log(err)
       });
@@ -34,10 +37,14 @@ export default function Create() {
               onChange={(e) => setGroupName(e.target.value)} />
           </div>
           <div>
-            <input 
-              className="w-24 float-right px-3 py-2 rounded cursor-pointer bg-purple-800 hover:bg-purple-900 bg-transparent font-sans text-gray-300"
-              type="submit" 
-              value="Create" />
+            <button 
+              className="flex items-center float-right px-3 py-2 rounded cursor-pointer bg-purple-800 hover:bg-purple-900 bg-transparent font-sans text-gray-300"
+              type="button"
+              onClick={onCreateNewGroup}
+            >
+              {/* loading */}
+              <p className="mx-auto">Create</p>
+            </button>
           </div>
         </form>
       </div>
