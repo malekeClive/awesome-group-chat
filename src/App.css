@@ -1,0 +1,19 @@
+body {
+  background-color: #121212;
+}
+
+.spinner, .full-circle, .half-circle {
+  width: 20px;
+}
+
+.spinner {
+  margin-right: .3rem;
+}
+
+.full-circle {
+  stroke: #4a5568;
+}
+
+.half-circle {
+  stroke: #a0aec0;
+}
