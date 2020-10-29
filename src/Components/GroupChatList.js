@@ -2,10 +2,8 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllRoomByUser } from '../actions/actionRooms';
-import { getChat } from '../actions/actionChat';
 import { getRoomId } from '../actions/actionRoomId';
 import { useHistory } from 'react-router-dom';
-import socket from '../socket';
 
 export default function GroupChatList() {
   
@@ -30,9 +28,6 @@ export default function GroupChatList() {
     } else {
       const getRoomChat = roomList.find(room => room.roomId === groupId);
       dispatch(getRoomId(getRoomChat.roomId));
-      // socket.on('message', (res) => {
-      //   dispatch(getChat(res));
-      // });
       history.push("/room-chat");
     }
   }

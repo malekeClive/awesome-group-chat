@@ -43,7 +43,6 @@ export default function RoomChat(props) {
     }
   }, [])
 
-
   const closeChatRoom = () => {
     socket.emit('disconnect');
     props.history.push("/list");
@@ -56,6 +55,8 @@ export default function RoomChat(props) {
       name: auth.user.username, 
       msg: chatText 
     });
+
+    setChatText("");
   }
 
   return (
@@ -102,7 +103,7 @@ export default function RoomChat(props) {
 const ChatBubble = ({ chat }) => {
   return (
     <div className="m-1 text-gray-800">
-      <div className={`shadow-md rounded-lg p-4 float-${chat.uId !== auth.userId ? 'left' : 'right'}`}>
+      <div className={`shadow-md rounded-lg p-4 float-${chat.uId !== auth.user.userId ? 'left' : 'right'}`}>
         <div className="border-b-2">
           <div>
             <h4 className="font-mono text-xl">
