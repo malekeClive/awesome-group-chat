@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import axios from 'axios';
 import { URL, PORT } from '../../utils/url';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllRoomByUser } from '../../actions/actionRooms';
 import { getRoomId } from '../../actions/actionRoomId';
 import { useHistory } from 'react-router-dom';
-import Room from './Room';
+
+import Loading from '../../helpers/LoadingComponent';
 
 export default function GroupChatList() {
+  const Rooms = lazy(() => import('./Rooms'))
+
   const roomList  = useSelector((store) => store.rooms);
   const chatList  = useSelector((store) => store.chats);
   const dispatch  = useDispatch();
@@ -34,25 +37,11 @@ export default function GroupChatList() {
     }
   }
 
-  const rooms = () => {
-    if (roomList.length !== 0) {
-      return (
-        <div className="grid lg:grid-cols-4">
-          {
-            roomList.map(room => (
-              <Room key={ room.roomId } chatList={chatList} room={room} chatRoomHandler={chatRoomHandler} />
-            ))
-          }
-        </div>
-      )
-    } else {
-      return <div className="w-1/2 my-8 mx-auto text-center">Empty group</div>
-    }
-  }
-
   return (
     <div>
-      { rooms() }
+      <Suspense fallback={ <Loading /> }>
+        <Rooms roomList={ roomList } chatList={ chatList } chatRoomHandler={ chatRoomHandler } />
+      </Suspense>
     </div>
   )
 }

@@ -16,15 +16,20 @@ export default function Create() {
       roomName: groupName,
     }
 
-    axios.post(`${URL}:${PORT}/api/chat/create`, form)
-      .then(res => {
-        console.log(res);
-        setIsLoading(false);
-        // <Notification />
-      }).catch(err => {
-        setIsLoading(false);
-        console.log(err)
-      });
+    setTimeout(() => {
+      setIsLoading(false);
+      setGroupName("");
+    }, 1000)
+    
+
+    // axios.post(`${URL}:${PORT}/api/chat/create`, form)
+    // .then(res => {
+    //   setIsLoading(false);
+    //   // <Notification />
+    // }).catch(err => {
+    //   setIsLoading(false);
+    //   console.log(err)
+    // });
   }
 
   return (
