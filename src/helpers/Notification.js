@@ -1,15 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, Fragment } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-export default function Notification({ status }) {
-  const [ isShowed, setIsShowed ] = useState(false);
+import { actionNotification } from '../actions/actionNotification';
 
-  useEffect(() => {
-    setIsShowed(status);
-  }, [ status ]);
+export default function Notification() {
+  const dispatch = useDispatch();
+  const notifResponse = useSelector(store => store.notifResponse);
+  
+  // useEffect(() => {
+  //   console.log("Asdsad");
+  // }, [ notifResponse ]);
 
   return (
-    <div className={`${isShowed} fixed bg-gray-800 w-screen h-screen`}>
-      asd
-    </div>
+    <Fragment>
+      {
+        notifResponse ? 
+          <div className="w-full">
+            <div className=" absolute bg-gray-900 opacity-75 w-full h-full"></div>
+            <div className="absolute w-6/12 h-56 mx-auto my-64 left-0 right-0 p-4 rounded text-white bg-gray-900 border border-gray-300">
+              <button onClick={() => dispatch(actionNotification({ isShowing: false, msg: "" }))}>
+                Close
+              </button>
+            </div>
+          </div>
+        :
+        null
+      }
+    </Fragment>
   )
 }

@@ -10,8 +10,7 @@ export default function RoomChat(props) {
   const [ chatText, setChatText ] = useState("");
   const [ room, setRoom ] = useState({});
 
-  const user    = useSelector(store => store.user);
-
+  const user      = useSelector(store => store.user);
   const rooms     = useSelector(store => store.rooms);
   const chatList  = useSelector(store => store.chats);
   const roomId    = useSelector(store => store.roomId);
@@ -19,7 +18,6 @@ export default function RoomChat(props) {
   const dispatch  = useDispatch();
 
   const chatListByRoomId = chatList.filter(chat => chat.roomId === roomId);
-
 
   useEffect(() => {
     const room = rooms.find(room => room.roomId === roomId);
@@ -46,7 +44,7 @@ export default function RoomChat(props) {
       socket.off('message', logMsg);
       socket.off('chat-message', dispatchMsg);
     }
-  }, [])
+  }, [dispatch, roomId]);
 
   const closeChatRoom = () => {
     socket.emit('disconnect');

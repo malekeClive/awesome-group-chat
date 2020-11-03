@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function LoadingComponent() {
+export default function SkeletonComponent() {
   const Skeletons = ({ sLength }) => {
     const skeletonList  = [];
     for (let idx = 0; idx < sLength; idx++) {

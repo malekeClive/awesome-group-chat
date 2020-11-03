@@ -2,6 +2,10 @@ body {
   background-color: #121212;
 }
 
+.blur-bg {
+  -webkit-filter: blur(8px);
+}
+
 .spinner, .full-circle, .half-circle {
   width: 20px;
 }

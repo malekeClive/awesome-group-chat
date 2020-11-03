@@ -6,7 +6,7 @@ import { getAllRoomByUser } from '../../actions/actionRooms';
 import { getRoomId } from '../../actions/actionRoomId';
 import { useHistory } from 'react-router-dom';
 
-import Loading from '../../helpers/LoadingComponent';
+import Loading from '../../helpers/SkeletonComponent';
 
 export default function GroupChatList() {
   const Rooms = lazy(() => import('./Rooms'))
@@ -25,7 +25,7 @@ export default function GroupChatList() {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [dispatch]);
 
   const chatRoomHandler = (groupId=null) => {
     if (groupId === null) {

@@ -15,7 +15,9 @@ import GroupChatList from './Components/Room/GroupChatList';
 import Login from './Components/Login';
 import RoomChat from './Components/Chat/RoomChat';
 import Nav from './Components/Nav';
+import Notification from './helpers/Notification';
 
+// header request
 axios.interceptors.request.use( config => {
     const token = localStorage.getItem('token');
     config.headers.authorization = `Bearer ${token}`;
@@ -32,6 +34,8 @@ function App() {
 
   return (
     <Router>
+      <Notification />
+
       <div>
         {isAuth ? 
         <Nav setIsAuth={setIsAuth} />

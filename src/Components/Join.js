@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { URL, PORT } from '../utils/url';
+import ButtonSubmit from '../helpers/ButtonSubmit';
 
 export default function Join() {
   const [ roomId, setRoomId ] = useState("");
+  const [ isLoading, setIsLoading ] = useState(false);
 
   const findRoom = async (e) => {
     e.preventDefault();
@@ -28,10 +30,7 @@ export default function Join() {
               onChange={(e) => setRoomId(e.target.value)} />
           </div>
           <div>
-            <input 
-              className="w-24 float-right px-3 py-2 rounded cursor-pointer bg-purple-800 hover:bg-purple-900 bg-transparent font-sans text-gray-300"
-              type="submit" 
-              value="Join" />
+            <ButtonSubmit submitHandler={ findRoom } loading={ isLoading } label="Join" />
           </div>
         </form>
       </div>
