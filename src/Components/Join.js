@@ -10,7 +10,7 @@ export default function Join() {
   const findRoom = async (e) => {
     e.preventDefault();
     try {
-      const sendData = await axios.post(`${URL}:${PORT}/api/chat/join`, {roomId: roomId});
+      const sendData = await axios.post(`${URL}:${PORT}/api/room/join`, {roomId: roomId});
       console.log(sendData.data);
     } catch (error) {
       console.log(error.message);

@@ -5,7 +5,7 @@ function notificationReducer(notification={}, action) {
     case NOTIFICATION:
       return {
         ...notification,
-        ...action.notif
+        ...action.payload
       }
     default:
       return notification;

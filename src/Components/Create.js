@@ -20,7 +20,7 @@ export default function Create() {
 
     const form = { roomName: groupName }
 
-    axios.post(`${URL}:${PORT}/api/chat/create`, form)
+    axios.post(`${URL}:${PORT}/api/room/create`, form)
     .then(res => {
       setIsLoading(false);
       dispatch(actionNotification({ isShowing: true, msg: "asdsad" + res }));

@@ -1,13 +1,11 @@
 import { ROOMS } from '../actions/actionRooms';
 
-function roomsReducer(rooms=[], action) {
+function roomsReducer(state=[], action) {
   switch (action.type) {
     case ROOMS:
-      return [
-        ...action.newRooms
-      ]
+      return action.payload;
     default:
-      return rooms;
+      return state;
   }
 }
 

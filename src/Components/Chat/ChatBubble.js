@@ -6,18 +6,18 @@ export default function ChatBubble({ chat }) {
 
   return (
     <div className="m-1 text-gray-800">
-      <div className={`shadow-md bg-gray-100 rounded-lg p-4 float-${ chat.uId !== user.userId ? 'left' : 'right' }`}>
+      <div className={`shadow-md bg-gray-100 rounded-lg p-4 float-${ chat.userId !== user.userId ? 'left' : 'right' }`}>
         <div className="border-b-2">
           <div>
             <h4 className="font-mono text-xl">
-              { chat.name }
+              {/* { chat.name } */}
             </h4>
           </div>
         </div>
 
         <div className="mt-2">
           <p className="font-mono text-lg">
-            { chat.msg }
+            { chat.description }
           </p>
         </div>
       </div>

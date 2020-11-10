@@ -8,6 +8,7 @@ import ChatBubble from './ChatBubble';
 
 export default function RoomChat(props) {
   const [ chatText, setChatText ] = useState("");
+  const [ chatData, setChatData ] = useState([]);
   const [ room, setRoom ] = useState({});
 
   const user      = useSelector(store => store.user);
@@ -17,7 +18,12 @@ export default function RoomChat(props) {
 
   const dispatch  = useDispatch();
 
-  const chatListByRoomId = chatList.filter(chat => chat.roomId === roomId);
+  useEffect(() => {
+    // MASIH SALAH
+    console.log(chatList);
+    // const chatListByRoomId = chatList.filter(chat => chat.roomId === roomId);
+    // setChatData(chatListByRoomId);
+  }, [chatList])
 
   useEffect(() => {
     const room = rooms.find(room => room.roomId === roomId);
@@ -54,9 +60,9 @@ export default function RoomChat(props) {
   const onSendChat = () => {
     socket.emit('chat', { 
       roomId: roomId,
-      uId: user.userId, 
-      name: user.username, 
-      msg: chatText 
+      userId: user.userId, 
+      // name: user.username, 
+      description: chatText 
     });
 
     setChatText("");
@@ -73,6 +79,7 @@ export default function RoomChat(props) {
           <div className="h-10 mr-6 w-px rounded bg-gray-600"></div>
           <div>
             <h2 className="">{ room ? room.roomName : null }</h2>
+            <i className="text-sm">Room ID : { room ? room.roomId : null }</i>
           </div>
         </div>
       </div>
@@ -80,7 +87,7 @@ export default function RoomChat(props) {
       <div className="relative overflow-y-scroll">
         <div className="flex flex-col my-16 px-8 py-4">
           {
-            chatListByRoomId.map(( chat, idx ) => (
+            chatData.map(( chat, idx ) => (
               <ChatBubble key={ idx } chat={ chat } />
             ))
           }

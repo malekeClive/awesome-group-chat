@@ -1,6 +1,9 @@
-import React from 'react'
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-export default function Room({ room, chatList, chatRoomHandler }) {
+export default function Room({ room, chatRoomHandler }) {
+  const chatList  = useSelector((store) => store.chats);
+
   const getLastChat = (roomId) => {
     const filterMsg = chatList.filter(chat => chat.roomId === roomId);
     const latestMsg = filterMsg[ filterMsg.length - 1 ];

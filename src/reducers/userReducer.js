@@ -4,7 +4,8 @@ function userReducer(user = {}, action) {
   switch (action.type) {
     case USER:
       return {
-        ...action.user
+        ...user,
+        ...action.payload
       }
     default:
       return user;

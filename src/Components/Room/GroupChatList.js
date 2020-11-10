@@ -1,46 +1,43 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import axios from 'axios';
 import { URL, PORT } from '../../utils/url';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getAllRoomByUser } from '../../actions/actionRooms';
-import { getRoomId } from '../../actions/actionRoomId';
-import { useHistory } from 'react-router-dom';
+import { actionStoreChat } from '../../actions/actionChat';
 
 import Loading from '../../helpers/SkeletonComponent';
 
 export default function GroupChatList() {
   const Rooms = lazy(() => import('./Rooms'))
-
-  const roomList  = useSelector((store) => store.rooms);
-  const chatList  = useSelector((store) => store.chats);
   const dispatch  = useDispatch();
-  const history   = useHistory();
 
   useEffect(() => {
     try {
-      axios(`${URL}:${PORT}/api/chat/getAll`)
+      axios(`${URL}:${PORT}/api/room/getAll`)
         .then(response => {
           dispatch(getAllRoomByUser(response.data.data));
         });
     } catch (error) {
       console.log(error);
     }
-  }, [dispatch]);
+  }, [ dispatch ]);
 
-  const chatRoomHandler = (groupId=null) => {
-    if (groupId === null) {
-      console.log("Oops.. room not found");
-    } else {
-      const getRoomChat = roomList.find(room => room.roomId === groupId);
-      dispatch(getRoomId(getRoomChat.roomId));
-      history.push("/room-chat");
+  useEffect(() => {
+    try {
+      axios(`${URL}:${PORT}/api/chat/getChat`)
+        .then(response => {
+          // store chat to redux store (not tested yet)
+          dispatch(actionStoreChat(response.data.data))
+        });
+    } catch (error) {
+      console.log(error);
     }
-  }
+  }, [])
 
   return (
     <div>
       <Suspense fallback={ <Loading /> }>
-        <Rooms roomList={ roomList } chatList={ chatList } chatRoomHandler={ chatRoomHandler } />
+        <Rooms />
       </Suspense>
     </div>
   )

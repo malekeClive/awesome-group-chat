@@ -1,8 +1,12 @@
 import { ROOMID } from '../actions/actionRoomId';
 
-function roomIdReducer(roomId=0, action) {
-  if (action.type === ROOMID) return action.roomId;
-  return roomId;
+function roomIdReducer(roomId=null, action) {
+  switch (action.type) {
+    case ROOMID:
+      return action.payload;
+    default:
+      return roomId;
+  }
 }
 
 export default roomIdReducer;
