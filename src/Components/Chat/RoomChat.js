@@ -30,8 +30,8 @@ export default function RoomChat({ currentRoom, chatList, setChat }) {
     }
     
     const dispatchMsg = (msg) => {
-      console.log("Asdsd", msg);
-      // dispatch(actionStoreChat(msg))
+      console.log(msg);
+      dispatch(actionStoreChat(msg))
     }
 
     // listener(s)
@@ -53,7 +53,7 @@ export default function RoomChat({ currentRoom, chatList, setChat }) {
     const data = {
       roomId: currentRoom.roomId,
       userId: user.userId, 
-      // name: user.username, 
+      name: user.username, 
       description: chatText 
     }
 

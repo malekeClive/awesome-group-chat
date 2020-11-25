@@ -1,5 +1,11 @@
-import React from 'react'
+import React from 'react';
 import Auth from './auth';
+
+import joinImg from '../Images/network.png';
+import createImg from '../Images/magic-wand.png';
+import listImg from '../Images/checklist.png';
+import logoutImg from '../Images/exit.png';
+
 import { Link, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -16,22 +22,23 @@ export default function Nav({ setIsAuth }) {
   }
 
   return (
-    <div className="bg-gray-900 shadow-inner p-4 font-sans text-xl text-gray-600 w-full flex items-center justify-between">
+    <div className="bg-gray-900 shadow-inner p-2 font-sans text-xl text-gray-600 w-full flex items-center justify-between">
       <nav className="ml-6">
         <ul className="flex items-center">
           <li className={listStyling}>
-            <Link to="/">Join room</Link>
+            <Link to="/"><img className="w-6" src={ joinImg } alt="join-img"></img></Link>
           </li>
+          <li className="h-6 mr-6 bg-gray-600 w-px rounded"></li>
           <li className={listStyling}>
-            <Link to="/create">Create new room</Link>
+            <Link to="/create"><img className="w-6" src={ createImg } alt="create-img"></img></Link>
           </li>
+          <li className="h-6 mr-6 bg-gray-600 w-px rounded"></li>
           <li className={listStyling}>
-            <Link to="/list">Chat list</Link>
+            <Link to="/list"><img className="w-6" src={ listImg } alt="list-img"></img></Link>
           </li>
-          <li className="h-10 mr-6 bg-gray-600 w-px rounded">
-          </li>
-          <li className="mr-6">
-            <button className="rounded hover:text-red-400 p-2" onClick={onLogout}>Logout</button>
+          <li className="h-6 mr-6 bg-gray-600 w-px rounded"></li>
+          <li className={listStyling}>
+            <button className="p-2" onClick={onLogout}><img className="w-6" src={ logoutImg } alt="logout-img"></img></button>
           </li>
         </ul>      
       </nav>

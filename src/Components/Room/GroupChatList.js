@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy } from 'react';
 import axios from 'axios';
 import { URL, PORT } from '../../utils/url';
 import { getAllRoomByUser } from '../../actions/actionRooms';
-import { actionStoreChat } from '../../actions/actionChat';
+import { actionStoreChat, actionStoreChatList } from '../../actions/actionChat';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoomId } from '../../actions/actionRoomId';
 import RoomChat from '../Chat/RoomChat';
@@ -34,7 +34,7 @@ function GroupChatList() {
       axios(`${URL}:${PORT}/api/chat/getChat`)
         .then(response => {
           // store chat to redux store (not tested yet)
-          dispatch(actionStoreChat(response.data.data))
+          dispatch(actionStoreChatList(response.data.data))
         });
     } catch (error) {
       console.log(error);
@@ -42,13 +42,17 @@ function GroupChatList() {
   }, [ dispatch ])
 
   const chatRoomHandler = (groupId=null) => {
-    if (groupId === null) {
-      console.log("Oops.. room not found");
-    } else {
-      const getRoomChat = roomList.find(room => room.roomId === groupId);
-      const filterChat = chatList.filter(chat => chat.roomId === getRoomChat.roomId);
-      setCurrentRoom(getRoomChat);
-      setChat(filterChat);
+    try {
+      if (groupId === null) {
+        console.log("Oops.. room not found");
+      } else {
+        const getRoomChat = roomList.find(room => room.roomId === groupId);
+        const filterChat = chatList.filter(chat => chat.roomId === getRoomChat.roomId);
+        setCurrentRoom(getRoomChat);
+        setChat(filterChat);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 

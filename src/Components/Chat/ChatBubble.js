@@ -10,7 +10,7 @@ export default function ChatBubble({ chat }) {
         <div className="border-b-2">
           <div>
             <h4 className="font-mono text-xl">
-              {/* { chat.name } */}
+              { chat.username }
             </h4>
           </div>
         </div>
