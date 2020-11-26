@@ -22,7 +22,7 @@ export default function Nav({ setIsAuth }) {
   }
 
   return (
-    <div className="bg-gray-900 shadow-inner p-2 font-sans text-xl text-gray-600 w-full flex items-center justify-between">
+    <div className="w-screen flex items-center justify-between p-2 font-sans text-xl bg-gray-900 shadow-inner text-gray-600">
       <nav className="ml-6">
         <ul className="flex items-center">
           <li className={listStyling}>

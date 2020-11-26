@@ -1,21 +1,19 @@
-import React, { useState, useEffect, lazy } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { URL, PORT } from '../../utils/url';
 import { getAllRoomByUser } from '../../actions/actionRooms';
-import { actionStoreChat, actionStoreChatList } from '../../actions/actionChat';
+import { actionStoreChatList } from '../../actions/actionChat';
 import { useDispatch, useSelector } from 'react-redux';
-import { getRoomId } from '../../actions/actionRoomId';
 import RoomChat from '../Chat/RoomChat';
-import Loader from '../HOC/Loader';
+import Room from '../Room/Room';
 
 
 function GroupChatList() {
-  const Room = lazy(() => import('./Room'))
   const dispatch  = useDispatch();
   const roomList  = useSelector((store) => store.rooms);
   const chatList  = useSelector(store => store.chats);
   
-  const [chat, setChat] = useState([]);
+  const [chat, setChat] = useState(null);
   const [currentRoom, setCurrentRoom] = useState({});
 
   useEffect(() => {
@@ -58,9 +56,9 @@ function GroupChatList() {
 
   return (
     <div className="flex">
-      <div className="md:w-2/6">
-        <div className="p-4 text-white">Search</div>
-        <div className="flex flex-col bg-gray-900">
+      <div className="md:w-2/6 overflow-y-scroll h-screen">
+        {/* <div className="p-4 text-white">Search</div> */}
+        <div className="flex flex-col bg-gray-900 ">
           {
             roomList.map(room => (
               <Room key={ room.roomId } room={room} chatRoomHandler={chatRoomHandler} />
@@ -68,13 +66,14 @@ function GroupChatList() {
           }
         </div>
       </div>
+
       <div className="w-full">
         {
-          chat ? <RoomChat currentRoom={currentRoom} chatList={chat} setChat={setChat} />  : null
+          chat !== null ? <RoomChat currentRoom={currentRoom} chatList={chat} setChat={setChat} />  : null
         }
       </div>
     </div>
   )
 }
 
-export default Loader(GroupChatList);
+export default GroupChatList;

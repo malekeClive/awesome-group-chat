@@ -8,18 +8,10 @@ import ChatBubble from './ChatBubble';
 
 export default function RoomChat({ currentRoom, chatList, setChat }) {
   const [ chatText, setChatText ] = useState("");
-  const [ chatData, setChatData ] = useState([]);
 
   const user      = useSelector(store => store.user);
 
   const dispatch  = useDispatch();
-
-  // useEffect(() => {
-    // MASIH SALAH
-    // console.log(chatList);
-    // const chatListByRoomId = chatList.filter(chat => chat.roomId === roomId);
-    // setChatData(chatListByRoomId);
-  // }, [chatList])
 
   useEffect(() => {
     // emmiter(s)
@@ -44,11 +36,6 @@ export default function RoomChat({ currentRoom, chatList, setChat }) {
     }
   }, [dispatch, currentRoom]);
 
-  // const closeChatRoom = () => {
-  //   socket.emit('disconnect');
-  //   props.history.push("/list");
-  // }
-
   const onSendChat = () => {
     const data = {
       roomId: currentRoom.roomId,
@@ -56,6 +43,7 @@ export default function RoomChat({ currentRoom, chatList, setChat }) {
       name: user.username, 
       description: chatText 
     }
+    console.log(data);
 
     socket.emit('chat', data);
     setChat(prev => [...prev, data]);
@@ -63,9 +51,9 @@ export default function RoomChat({ currentRoom, chatList, setChat }) {
   }
 
   return (
-    <div className="overflow-hidden">
+    <div className="flex flex-col h-screen">
       {/* Top header */}
-      <div className=" bg-gray-900 shadow-inner text-xl text-gray-600">
+      <div className="flex-shrink-0 bg-gray-900 shadow-inner text-xl text-gray-600">
         <div className="flex flex-row items-center">
           <div className="h-10 mr-6 w-px rounded bg-gray-600"></div>
           <div>
@@ -75,26 +63,24 @@ export default function RoomChat({ currentRoom, chatList, setChat }) {
         </div>
       </div>
 
-      <div className="relative overflow-y-scroll">
-        <div className="flex flex-col my-16 px-8 py-4">
-          {
-            chatList.map(( chat, idx ) => (
-              <ChatBubble key={ idx } chat={ chat } />
-            ))
-          }
-        </div>
+      <div className="flex flex-col px-8 overflow-y-auto">
+      {
+        chatList.map(( chat, idx ) => (
+          <ChatBubble key={ idx } chat={ chat } />
+        ))
+      }
       </div>
 
       {/* Bottom Chat */}
-      <div className="fixed w-full bottom-0 flex flex-row items-center content-between bg-gray-900 px-8 py-4">
-        <div className="sm:w-2/3 w-2/4 rounded-full bg-gray-800 p-4">
+      <div className="flex-shrink-0 flex flex-row items-center justify-between px-8 py-4 bg-gray-900">
+        <div className="flex-1 rounded-full bg-gray-800 p-4">
           <input 
-            className="sm:w-2/3 w-2/4 focus:outline-none font-mono text-lg text-gray-400 bg-gray-800"
+            className="w-full focus:outline-none font-mono text-lg text-gray-400 bg-gray-800"
             type="text" 
             value={chatText} 
             onChange={e => setChatText(e.target.value)} />
         </div>
-        <div className="fixed right-0 mx-6">
+        <div className="mx-6">
           <button className="font-mono font-bold text-xl text-gray-300 hover:text-purple-500" onClick={ onSendChat }>Send</button>
         </div>
       </div>
