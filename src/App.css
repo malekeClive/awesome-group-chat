@@ -21,3 +21,10 @@ body {
 .half-circle {
   stroke: #a0aec0;
 }
+
+.chat-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}

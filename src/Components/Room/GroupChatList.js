@@ -11,10 +11,7 @@ import Room from '../Room/Room';
 function GroupChatList() {
   const dispatch  = useDispatch();
   const roomList  = useSelector((store) => store.rooms);
-  const chatList  = useSelector(store => store.chats);
-  
-  const [chat, setChat] = useState(null);
-  const [currentRoom, setCurrentRoom] = useState({});
+  const [currentRoom, setCurrentRoom] = useState(null);
 
   useEffect(() => {
     try {
@@ -31,7 +28,6 @@ function GroupChatList() {
     try {
       axios(`${URL}:${PORT}/api/chat/getChat`)
         .then(response => {
-          // store chat to redux store (not tested yet)
           dispatch(actionStoreChatList(response.data.data))
         });
     } catch (error) {
@@ -45,35 +41,37 @@ function GroupChatList() {
         console.log("Oops.. room not found");
       } else {
         const getRoomChat = roomList.find(room => room.roomId === groupId);
-        const filterChat = chatList.filter(chat => chat.roomId === getRoomChat.roomId);
         setCurrentRoom(getRoomChat);
-        setChat(filterChat);
       }
     } catch (error) {
       console.log(error);
     }
   }
-
+  
   return (
-    <div className="flex">
-      <div className="md:w-2/6 overflow-y-scroll h-screen">
-        {/* <div className="p-4 text-white">Search</div> */}
-        <div className="flex flex-col bg-gray-900 ">
-          {
-            roomList.map(room => (
-              <Room key={ room.roomId } room={room} chatRoomHandler={chatRoomHandler} />
-            ))
-          }
-        </div>
-      </div>
-
-      <div className="w-full">
+    <div className="relative h-screen w-full flex flex-row">
+      <div className="absolute w-1/5 bottom-0 top-0 left-0 flex flex-col bg-gray-900 overflow-y-auto">
         {
-          chat !== null ? <RoomChat currentRoom={currentRoom} chatList={chat} setChat={setChat} />  : null
+          roomList.map(room => (
+            <Room key={ room.roomId } room={room} chatRoomHandler={chatRoomHandler} />
+          ))
         }
       </div>
+      {
+        currentRoom !== null ?
+        <RoomChat currentRoom={currentRoom} />  
+        :
+        <EmptyChat />
+      }
     </div>
   )
 }
 
+const EmptyChat = () => {
+  return (
+    <div className="absolute w-4/5 right-0 bottom-0 top-0 text-white bg-red-400">
+      <p>Chat Group</p>
+    </div>
+  )
+}
 export default GroupChatList;

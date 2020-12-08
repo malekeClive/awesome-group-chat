@@ -7,10 +7,6 @@ export default function Notification() {
   const dispatch = useDispatch();
   const notifResponse = useSelector(store => store.notifResponse);
   
-  // useEffect(() => {
-  //   console.log("Asdsad");
-  // }, [ notifResponse ]);
-
   return (
     <Fragment>
       {

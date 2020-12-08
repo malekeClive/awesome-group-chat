@@ -6,7 +6,7 @@ export default function Room({ room, chatRoomHandler }) {
   
   return (
     <div 
-      className="flex flex-col rounded cursor-pointer hover:bg-gray-800 text-gray-400" 
+      className="cursor-pointer hover:bg-gray-800 text-gray-400" 
       onClick={() => chatRoomHandler(room.roomId)}>
       <div className="text-lg p-4">
         <h2 className=" text-lg sm:text-2xl">
@@ -15,7 +15,7 @@ export default function Room({ room, chatRoomHandler }) {
       </div>
       <div className="p-4">
         <p className="text-xs sm:text-sm">
-          {/* asdasdkjasldkjalkzncxznxcnaq... */}
+          asdasdkjasldkjalkzncxznxcnaq...
         </p>
       </div>
     </div>

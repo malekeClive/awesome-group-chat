@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { URL, PORT } from '../utils/url';
-import auth from './auth';
 import jwt_decode from 'jwt-decode';
 
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../actions/actionUser';
+
+import auth from '../Components/auth';
 
 export default function Login(props) {
   const [ email, setEmail ]       = useState("");
@@ -27,17 +28,17 @@ export default function Login(props) {
     axios.post(`${URL}:${PORT}/`, user)
       .then(res => {
         auth.login( () => {
-          props.setIsAuth(true);
           localStorage.setItem('token', res.data.auth);
           convertJWTtoObj(res.data.auth);
           props.history.replace("/")
         });
       }).catch(err => {
-        if (err.response.status === 406) {
-          alert(err.response.data.message);
-        } else {
-          console.log(err);
-        }
+        console.log(err);
+        // if (err.response.status === 406) {
+        //   alert(err.response.data.message);
+        // } else {
+        //   console.log(err);
+        // }
       });
   }
 

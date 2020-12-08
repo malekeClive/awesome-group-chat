@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-
 import { actionStoreChat } from '../../actions/actionChat';
-
 import socket from '../../socket';
 import ChatBubble from './ChatBubble';
 
-export default function RoomChat({ currentRoom, chatList, setChat }) {
+export default function RoomChat({ currentRoom }) {
   const [ chatText, setChatText ] = useState("");
-
   const user      = useSelector(store => store.user);
-
+  const chatList  = useSelector(store => store.chats);
   const dispatch  = useDispatch();
+
+  const [ filteredChat, setFilteredChat ] = useState([]);
 
   useEffect(() => {
     // emmiter(s)
@@ -22,7 +21,6 @@ export default function RoomChat({ currentRoom, chatList, setChat }) {
     }
     
     const dispatchMsg = (msg) => {
-      console.log(msg);
       dispatch(actionStoreChat(msg))
     }
 
@@ -34,26 +32,31 @@ export default function RoomChat({ currentRoom, chatList, setChat }) {
       socket.off('message', logMsg);
       socket.off('chat-message', dispatchMsg);
     }
-  }, [dispatch, currentRoom]);
+  }, [ dispatch, currentRoom ]);
+
+  useEffect(() => {
+    const filterChat = chatList.filter(chat => chat.roomId === currentRoom.roomId);
+    setFilteredChat(filterChat);
+  }, [ currentRoom ]);
 
   const onSendChat = () => {
     const data = {
       roomId: currentRoom.roomId,
       userId: user.userId, 
-      name: user.username, 
+      username: user.username, 
       description: chatText 
     }
     console.log(data);
 
     socket.emit('chat', data);
-    setChat(prev => [...prev, data]);
+    setFilteredChat(prev => [...prev, data]);
     setChatText("");
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="absolute right-0 top-0 bottom-0 w-4/5 flex flex-col">
       {/* Top header */}
-      <div className="flex-shrink-0 bg-gray-900 shadow-inner text-xl text-gray-600">
+      <div className="bg-gray-900 shadow-inner text-xl text-gray-600">
         <div className="flex flex-row items-center">
           <div className="h-10 mr-6 w-px rounded bg-gray-600"></div>
           <div>
@@ -63,16 +66,18 @@ export default function RoomChat({ currentRoom, chatList, setChat }) {
         </div>
       </div>
 
-      <div className="flex flex-col px-8 overflow-y-auto">
-      {
-        chatList.map(( chat, idx ) => (
-          <ChatBubble key={ idx } chat={ chat } />
-        ))
-      }
+      <div className="relative h-screen">
+        <div className="absolute top-0 bottom-0 left-0 right-0 overflow-y-auto flex flex-col">
+        {
+          filteredChat.map(( chat, idx ) => (
+            <ChatBubble key={ idx } chat={ chat } />
+          ))
+        }
+        </div>
       </div>
 
       {/* Bottom Chat */}
-      <div className="flex-shrink-0 flex flex-row items-center justify-between px-8 py-4 bg-gray-900">
+      <div className="flex flex-row items-center justify-between px-8 py-4 bg-gray-900">
         <div className="flex-1 rounded-full bg-gray-800 p-4">
           <input 
             className="w-full focus:outline-none font-mono text-lg text-gray-400 bg-gray-800"

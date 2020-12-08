@@ -9,14 +9,13 @@ import logoutImg from '../Images/exit.png';
 import { Link, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-export default function Nav({ setIsAuth }) {
+export default function Nav() {
   const listStyling = `mr-6 hover:text-gray-300`;
   const history = useHistory();
   const user    = useSelector(store => store.user);
 
   const onLogout = () => {
     Auth.logout(() => {
-      setIsAuth(false);
       history.replace("/login")
     });
   }
