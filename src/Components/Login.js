@@ -24,7 +24,6 @@ export default function Login(props) {
     }
 
     const user = {email, password};
-    console.log(user);
     axios.post(`${URL}:${PORT}/`, user)
       .then(res => {
         auth.login( () => {
@@ -33,17 +32,16 @@ export default function Login(props) {
           props.history.replace("/")
         });
       }).catch(err => {
-        console.log(err);
-        // if (err.response.status === 406) {
-        //   alert(err.response.data.message);
-        // } else {
-        //   console.log(err);
-        // }
+        if (err.response.status === 406) {
+          alert(err.response.data.message);
+        } else {
+          console.log(err);
+        }
       });
   }
 
   const convertJWTtoObj = (jwtUser) => {
-    const decoded = jwt_decode(jwtUser).user[0];
+    const decoded = jwt_decode(jwtUser).getUser[0];
     const user = {
       userId: decoded.user_id,
       email: decoded.email,
@@ -54,36 +52,30 @@ export default function Login(props) {
   }
 
   return (
-    <div className="inline-block shadow h-screen font-mono text-gray-700">
-      <div className="flex-col justify-around">
-        <div className="mt-4">
-          <h3 className="text-4xl text-center">[Text Me]</h3>
+    <div className="relative h-screen w-full sm:w-64 font-mono flex flex-col text-orange-400 bg-gray-800">
+      <h3 className="m-4 text-4xl text-center">Simple Chat</h3>
+      <form onSubmit={onLogin} className="absolute flex flex-col items-center mb-8 bottom-0 left-0 right-0 text-center">
+        <div className="text-left mb-2">
+          <label className="block mb-2">Email</label>
+          <input 
+            className="w-full sm:w-48 rounded outline-none px-4 py-2 bg-gray-900"
+            type="text" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} />
         </div>
-        <div className="">
-          <form onSubmit={onLogin} className="m-4">
-            <div className="mb-4">
-              <label className="block mb-2">Email</label>
-              <input 
-                className="rounded outline-none shadow px-4 py-2"
-                type="text" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <div>
-              <label className="block">Password</label>
-              <input
-                className="rounded outline-none shadow px-4 py-2"
-                type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <div className="mt-4">
-              <input 
-                className="rounded shadow bg-transparent hover:bg-blue-200 hover:text-white border-gray-500 px-6 py-2 cursor-pointer float-right" 
-                type="submit" 
-                value="Login" />
-            </div>
-          </form>
+        <div className="text-left">
+          <label className="block mb-2">Password</label>
+          <input
+            className="w-full sm:w-48 rounded outline-none px-4 py-2 bg-gray-900"
+            type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-      </div>
+        <div className="m-4">
+          <input 
+            className="rounded px-6 py-2 hover:bg-orange-400 hover:text-gray-900 bg-transparent border border-orange-400 cursor-pointer" 
+            type="submit" 
+            value="Login" />
+        </div>
+      </form>
     </div>
   )
 }

@@ -4,6 +4,7 @@ module.exports = {
     extend: {
       inset: {
         '-30': '-30px',
+        '50': '50%',
       }
     },
   },
